@@ -1,4 +1,3 @@
-from num2words import num2words #pip install num2words
 #Натуральные нечетные числа.
 #Менять местами каждые два соседних числа пока не встретится
 #число из 3 подряд идущих нулей. После чего менять только каждую вторую пару.
@@ -13,7 +12,18 @@ def h(n):
         else:
             count = 0
     return False
-
+book = {
+    '0': 'ноль',
+    '1': 'один',
+    '2': 'два',
+    '3': 'три',
+    '4': 'четыре',
+    '5': 'пять',
+    '6': 'шесть',
+    '7': 'семь',
+    '8': 'восемь',
+    '9': 'девять'
+}
 with open('test.txt', 'r') as f:
     block = f.read(1024)
     while block:
@@ -52,7 +62,8 @@ with open('test.txt', 'r') as f:
                 lexemes[i] = b
                 lexemes[i + 1] = a
                 i += 4
+        block = f.read(1024)
 
 print(lexemes)
-print(num2words(int(lexemes[-1]), lang='ru'))
-block = f.read()
+for i in range(len(lexemes[-1])):
+    print(book[str(lexemes[-1][i])])
