@@ -23,7 +23,6 @@ book = {
 lexemes = []
 
 with open('test.txt', 'r') as f:
-    data = f.readlines()
     for line in f:
         r = re.split(r'\s+', line.strip())
 
