@@ -5,7 +5,15 @@
 import re
 
 def h(n):
-    return re.search('000', str(n)) is not None
+    count = 0
+    for i in range(len(str(n))):
+        if str(n)[i] == '0':
+            count += 1
+            if count == 3:
+                return True
+        else:
+            count = 0
+    return False
 
 book = {
     '0': 'ноль',
@@ -20,37 +28,42 @@ book = {
     '9': 'девять'
 }
 
-lexemes = []
+regex = re.compile(r'[13579]$')
 
 with open('test.txt', 'r') as f:
-    for line in f:
-        r = re.split(r'\s+', line.strip())
-
-        for word in r:
-            if word.isdigit():
-                if int(word) % 2 == 1:
-                    lexemes.append(word)
-                else:
-                    print(word, '- Не подходит условию')
+    r = f.read().split()
+    lexemes = []
+    for i in range(len(r)):
+        try:
+            if regex.search(r[i]):
+                lexemes.append(int(r[i]))
             else:
-                print(word, '- Не подходит условию')
-
-        print(lexemes)
-        i = 0
-        while i < len(lexemes) - 1 and not h(lexemes[i]) and not h(lexemes[i + 1]):
-            lexemes[i], lexemes[i + 1] = lexemes[i + 1], lexemes[i]
+                print(r[i], '- Не подходит условию')
+                continue
+        except ValueError:
+            print(r[i], '- Не подходит условию')
+            continue
+    i = 0
+    print(lexemes)
+    while not(h(lexemes[i])) and not(h(lexemes[i+1])):
+        if 0 <= i <= len(lexemes)-2:
+            a = lexemes[i]
+            b = lexemes[i+1]
+            lexemes[i] = b
+            lexemes[i + 1] = a
             i += 2
-
-        if i < len(lexemes) - 1 and (h(lexemes[i]) or h(lexemes[i + 1])):
-            i += 1
-            while i < len(lexemes) - 1:
-                lexemes[i], lexemes[i + 1] = lexemes[i + 1], lexemes[i]
-                i += 4
-
-        block = f.read()
-
-print(lexemes)
-
-if lexemes:
-    for digit in lexemes[-1]:
-        print(book[digit])
+            if not(0 <= i <= len(lexemes)-2):
+                break
+        else:
+            break
+    else:
+        while 0 <= i <= len(lexemes)-3:
+            a = lexemes[i]
+            b = lexemes[i+1]
+            lexemes[i] = b
+            lexemes[i + 1] = a
+            i += 4
+    print(lexemes)
+    if lexemes:
+        for i in range(len(str(lexemes[-1]))):
+            print(book[str(lexemes[-1])[i]])
