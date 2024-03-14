@@ -1,0 +1,100 @@
+#С клавиатуры вводится два числа K и N. Квадратная матрица А(N,N), состоящая из 4-х равных
+# по размерам подматриц, B,C,D,E заполняется случайным образом целыми числами в интервале [-10,10].
+# Для тестирования использовать не случайное заполнение, а целенаправленное.
+#Для ИСТд-11 вид матрицы А
+#B C
+#D E
+#Подматрицы имеют вид:
+#  2
+# 1 3
+#  4
+#Формируется матрица F следующим образом: если в С количество положительных элементов в четных
+#столбцах в области 2 больше, чем количество отрицательных  элементов в нечетных столбцах в области 4,
+# то поменять в С симметрично области 1 и 3 местами, иначе С и Е поменять местами несимметрично.
+# При этом матрица А не меняется. После чего вычисляется выражение: (F+A)*AT – K * F.
+# Выводятся по мере формирования А, F и все матричные операции последовательно.
+import random
+
+# Вводим K и N с клавиатуры
+K = int(input("Введите значение K: "))
+N = int(input("Введите значение N: "))
+
+# Создаем матрицы B, C, D, E и заполняем их случайными числами
+B = [[random.randint(-10, 10) for j in range(N//2)] for i in range(N//2)]
+C = [[random.randint(-10, 10) for j in range(N//2)] for i in range(N//2)]
+D = [[random.randint(-10, 10) for j in range(N//2)] for i in range(N//2)]
+E = [[random.randint(-10, 10) for j in range(N//2)] for i in range(N//2)]
+print("Матрица B:")
+for row in B:
+    print(row)
+print("Матрица C:")
+for row in C:
+    print(row)
+print("Матрица D:")
+for row in D:
+    print(row)
+print("Матрица E:")
+for row in E:
+    print(row)
+
+A = [[0] * N for _ in range(N)]
+for i in range(N // 2):
+    for j in range(N // 2):
+        A[i][j] = B[i][j]
+for i in range(N // 2, N):
+    for j in range(N // 2):
+        A[i][j] = D[i - N // 2][j]
+for i in range(N // 2):
+    for j in range(N // 2, N):
+        A[i][j] = C[i][j - N // 2]
+for i in range(N // 2, N):
+    for j in range(N // 2, N):
+        A[i][j] = E[i -N // 2][j - N // 2]
+
+print("Матрица A:")
+for row in A:
+    print(row)
+
+
+F = [[0 for j in range(N)] for i in range(N)]
+C_pos = 0
+C_neg = 0
+for j in range(1, N, 2):
+    if j < N//2:
+        for i in range(N//2, N):
+            if C[i-N//2][j] > 0:
+                C_pos += 1
+            else:
+                C_neg += 1
+        for i in range(N // 2):
+            if i < len(E) and E[i][j] > 0:
+                C_pos += 1
+            else:
+                C_neg += 1
+        if C_pos > C_neg:
+            for i in range(N//2):
+                for j in range(N//2):
+                    F[i][j], F[i+N//2][j+N//2] = A[i+N//2][j+N//2], A[i][j]
+        else:
+            for i in range(N//2):
+                for j in range(N//2, N):
+                    F[i][j], F[i+N//2][j-N//2] = A[i+N//2][j-N//2], A[i][j]
+    else:
+        C, E = E, C
+        for i in range(N//2):
+            for j in range(N//2):
+                F[i][j], F[i][j+N//2], F[i+N//2][j], F[i+N//2][j+N//2] = A[i][j], C[i][j], D[i][j], E[i][j]
+print("Матрица F:")
+for row in F:
+    print(row)
+
+AT = [[A[j][i] for j in range(N)] for i in range(N)]
+result = [[0 for j in range(N)] for i in range(N)]
+for i in range(N):
+    for j in range(N):
+        for k in range(N):
+            result[i][j] += (F[i][k] + A[i][k]) * AT[j][k]
+        result[i][j] -= K * F[i][j]
+print("Результат выражения (F+A)*AT - K*F:")
+for row in result:
+    print(row)
