@@ -19,71 +19,70 @@ import random
 K = int(input("Введите значение K: "))
 N = int(input("Введите значение N: "))
 
-# Создаем матрицы B, C, D, E и заполняем их случайными числами
+' Создаем матрицы B, C, D, E и заполняем их случайными числами'
 B = [[random.randint(-10, 10) for j in range(N//2)] for i in range(N//2)]
 C = [[random.randint(-10, 10) for j in range(N//2)] for i in range(N//2)]
 D = [[random.randint(-10, 10) for j in range(N//2)] for i in range(N//2)]
 E = [[random.randint(-10, 10) for j in range(N//2)] for i in range(N//2)]
-print("Матрица B:")
-for row in B:
-    print(row)
-print("Матрица C:")
-for row in C:
-    print(row)
-print("Матрица D:")
-for row in D:
-    print(row)
-print("Матрица E:")
-for row in E:
-    print(row)
 
+'Создаем матрицу А'
 A = [[0] * N for _ in range(N)]
 for i in range(N // 2):
     for j in range(N // 2):
         A[i][j] = B[i][j]
 for i in range(N // 2, N):
     for j in range(N // 2):
-        A[i][j] = D[i - N // 2][j]
+        A[i][j] = D[i - N // 2 -1][j]
 for i in range(N // 2):
     for j in range(N // 2, N):
-        A[i][j] = C[i][j - N // 2]
+        A[i][j] = C[i][j - N // 2-1]
 for i in range(N // 2, N):
     for j in range(N // 2, N):
-        A[i][j] = E[i -N // 2][j - N // 2]
+        A[i][j] = E[i -N // 2-1][j - N // 2-1]
 
 print("Матрица A:")
 for row in A:
     print(row)
 
-
+'Копируем А в F'
 F = [[0 for j in range(N)] for i in range(N)]
+for i in range(N):
+    for j in range(N):
+        F[i][j] = A[i][j]
 C_pos = 0
 C_neg = 0
-for j in range(1, N, 2):
-    if j < N//2:
-        for i in range(N//2, N):
-            if C[i-N//2][j] > 0:
-                C_pos += 1
-            else:
-                C_neg += 1
-        for i in range(N // 2):
-            if i < len(E) and E[i][j] > 0:
-                C_pos += 1
-            else:
-                C_neg += 1
-        if C_pos > C_neg:
-            for i in range(N//2):
-                for j in range(N//2):
-                    F[i][j], F[i+N//2][j+N//2] = A[i+N//2][j+N//2], A[i][j]
-        else:
-            for i in range(N//2):
-                for j in range(N//2, N):
-                    F[i][j], F[i+N//2][j-N//2] = A[i+N//2][j-N//2], A[i][j]
-    else:
-        C, E = E, C
-        for i in range(N//2):
-            for j in range(N//2):
-                F[i][j], F[i][j+N//2], F[i+N//2][j], F[i+N//2][j+N//2] = A[i][j], C[i][j], D[i][j], E[i][j]
+
+'В подматрице С'
+for i in range(N//2):
+    for j in range(N//2):
+        '2 область'
+        for i in range(N // 2+1):
+            for j in range(i, N - i):
+                if i < len(C) and j < len(C[i]):
+                    if C[i][j] > 0 and j%2==0:
+                        C_pos += 1
+            '4 область'
+        for i in range(N // 2, N):
+            for j in range(N - i - 1, i + 1):
+                if i < len(C) and j < len(C[i]):
+                    if C[i][j]<0 and j%2!=0:
+                        C_neg+=1
+
+if C_pos > C_neg:
+    'Меняем в С области 1 и 3'
+    for i in range(N):
+        for j in range(i + 1):
+            if j <= i and j <= N - 1 - i:
+                if j <= N // 2:
+                    F[i][j], F[N - 1 - i][j] = F[N - 1 - i][j], F[i][j]
+                else:
+                    F[i][j], F[N - 1 - i][N - 1 - j] = F[N - 1 - i][N - 1 - j], F[i][j]
+
+else:
+    'Меняем в F С и Е'
+    for i in range(N//2):
+        for j in range(N//2):
+            F[i][j], F[i][j+N//2], F[i+N//2][j], F[i+N//2][j+N//2] = B[i][j], E[i][j], D[i][j], C[i][j]
 print("Матрица F:")
 for row in F:
     print(row)
@@ -98,3 +97,4 @@ for i in range(N):
 print("Результат выражения (F+A)*AT - K*F:")
 for row in result:
     print(row)
+
