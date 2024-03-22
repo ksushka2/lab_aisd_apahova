@@ -54,7 +54,7 @@ C_neg = 0
 
 'В подматрице С'
 for i in range(N//2):
-    for j in range(N//2):
+    for j in range(N//2, N):
         '2 область'
         for i in range(N // 2+1):
             for j in range(i, N - i):
