@@ -32,7 +32,13 @@ A[n2:, n2:] = np.random.randint(-10, 10, size=(N - n2, N - n2)) # Подматр
 
 print("Матрица A:")
 print(A)
-
+# Функция для графиков
+def print_mat(mat, description):
+    plt.matshow(mat)
+    plt.title(description)
+    plt.colorbar()
+    plt.show()
+print_mat(A, "Матрица A")
 # Создаем матрицу F
 F = A.copy()
 
@@ -52,7 +58,7 @@ else:
     n3 = N - n2
     F[:n3, n2:] = F[n2:, n2:]
     F[n2:, n2:] = C[::-1, ::-1]
-
+print_mat(F, "Матрица F")
 print("Матрица F:")
 print(F)
 
@@ -65,14 +71,13 @@ sum_diag_F = np.trace(F)
 print("Сумма главной диагонали матрицы F:")
 print(sum_diag_F)
 
-print("Нижний треугольник матрицы А:")
 # Вычисляем выражение AAT – K * FA-1 или (К*A-1 +G-FТ)*K в зависимости от условия
 if det_A > sum_diag_F:
     G = np.tril(A)
     result = np.dot(A, A.T) - K * np.dot(F, np.linalg.inv(A))
 else:
     result = K * np.dot(np.linalg.inv(A), A - F.T) + G
-
+print_mat(G, "Подматрица G")
 print(G)
 # Выводим результат
 print("Результат:")
