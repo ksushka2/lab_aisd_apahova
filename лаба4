@@ -78,6 +78,7 @@ if det_A > sum_diag_F:
     G = np.tril(A)
     result = np.dot(A, A.T) - K * np.dot(F, np.linalg.inv(A))
 else:
+    G = np.tril(A)
     result = K * np.dot(np.linalg.inv(A), A - F.T) + G
 plt.imshow(G, cmap='coolwarm', interpolation='nearest')
 plt.colorbar()
