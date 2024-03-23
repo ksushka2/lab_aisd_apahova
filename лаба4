@@ -32,7 +32,7 @@ A[n2:, n2:] = np.random.randint(-10, 10, size=(N - n2, N - n2)) # Подматр
 
 print("Матрица A:")
 print(A)
-# Функция для графиков
+# Цветной график
 def print_mat(mat, description):
     plt.matshow(mat)
     plt.title(description)
@@ -58,6 +58,7 @@ else:
     n3 = N - n2
     F[:n3, n2:] = F[n2:, n2:]
     F[n2:, n2:] = C[::-1, ::-1]
+#Линейный график
 plt.plot(F)
 plt.title("Matrix F")
 plt.show()
@@ -80,6 +81,7 @@ if det_A > sum_diag_F:
 else:
     G = np.tril(A)
     result = K * np.dot(np.linalg.inv(A), A - F.T) + G
+#Цветной график
 plt.imshow(G, cmap='coolwarm', interpolation='nearest')
 plt.colorbar()
 plt.show()
