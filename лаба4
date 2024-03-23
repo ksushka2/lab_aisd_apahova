@@ -79,9 +79,10 @@ if det_A > sum_diag_F:
     result = np.dot(A, A.T) - K * np.dot(F, np.linalg.inv(A))
 else:
     result = K * np.dot(np.linalg.inv(A), A - F.T) + G
-plt.scatter(x, y, c=G.flatten(), cmap='viridis')
+plt.imshow(G, cmap='coolwarm', interpolation='nearest')
 plt.colorbar()
 plt.show()
+
 print(G)
 # Выводим результат
 print("Результат:")
