@@ -52,13 +52,13 @@ for i in range(N):
 C_pos = 0
 C_neg = 0
 
-'2 область'
+'2 область в С'
 for i in range(N // 2+1):
     for j in range(i, N - i):
         if i < len(C) and j < len(C[i]):
             if C[i][j] > 0 and j%2==0:
                 C_pos += 1
-    '4 область'
+    '4 область в С'
 for i in range(N // 2, N):
     for j in range(N - i - 1, i + 1):
         if i < len(C) and j < len(C[i]):
