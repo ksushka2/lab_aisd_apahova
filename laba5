@@ -27,7 +27,7 @@ def recursive_factorial(i):
 
 
 # итерационный подход
-def iterative_F(n):
+def iterative_F(n,sign=1):
     f0 = 5
     f1 = 1
     if n == 0:
@@ -38,9 +38,10 @@ def iterative_F(n):
         fact1 = 2
 
         for i in range(2, n + 1):
+            sign *= -1
             fact2 = fact1 * (i - 1) * i
 
-            fi = (-1) ** i * (2 * f1 / fact2 + f0 / (2 * i * fact2))
+            fi = sign * (2 * f1 / fact2 + f0 / (2 * i * fact2))
             f0 = f1
             f1 = fi
 
