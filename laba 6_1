@@ -27,7 +27,7 @@ for trio in trios:
 
 print("Время выполнения алгоритмического подхода:", end_time - start_time)
 
-# функциональный подход
+# с помощью функций
 instruments = list(range(0, K ))
 
 start_time = time.time()
