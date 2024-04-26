@@ -7,47 +7,46 @@ import math
 import time
 
 
+def factorial(n):
+    if n == 0:
+        return 1
+    q = 1
+    for j in range(1, n + 1):
+        q *= j
+    return q
+
+sign=1
 # рекурсивный подход
-def recursive_F(n,sign=1):
+def recursive_F(n):
     if n == 0:
         return 5
     elif n == 1:
         return 1
     else:
+        global sign
         sign *= -1
-        return sign * (2 * recursive_F(n - 1) / recursive_factorial(n) + recursive_F(n - 2) / (2 * n * recursive_factorial(n)))
+        return sign * (2 * recursive_F(n - 1) / factorial(n) + recursive_F(n - 2) / (2 * n * factorial(n)))
 
 
-# функция для вычисления факториала числа i
-def recursive_factorial(i):
-    if i == 0:
-        return 1
-    else:
-        return i * recursive_factorial(i - 1)
-
-
-# итерационный подход
-def iterative_F(n,sign=1):
+sign = 1
+fpred2 = 1
+fpred = 1
+# итерация подход
+def iterative_F(n):
     f0 = 5
     f1 = 1
+    global fpred2, fpred, sign
     if n == 0:
         return f0
     elif n == 1:
         return f1
     else:
-        fact1 = 2
-
         for i in range(2, n + 1):
             sign *= -1
-            fact2 = fact1 * (i - 1) * i
+            fi = sign * ((2 * fpred // factorial(i)) + (fpred2 // factorial(2 * i)))
+            fpred2, fpred = fpred, fi
+        return fpred
 
-            fi = sign * (2 * f1 / fact2 + f0 / (2 * i * fact2))
-            f0 = f1
-            f1 = fi
-
-            fact1 = fact2
-
-        return f1
 
 # сравнение времени выполнения
 n = 20
