@@ -20,7 +20,7 @@ ranges = {i: (i % T, (i % T) + T - 1) for i in instruments}
 def is_in_range(instrument, frequency_range):
     return ranges[instrument][0] <= frequency_range <= ranges[instrument][1]
 
-# алгоритмический подход
+# Алгоритмический подход
 start_time = timeit.timeit()
 trios = []
 for i in range(K - 2):
@@ -34,7 +34,7 @@ for trio in trios:
 
 print(f"Время выполнения алгоритмического подхода: {abs(end_time - start_time)} cек.")
 
-# с помощью функций
+# С помощью функций
 instruments = list(range(0, K ))
 
 start_time = timeit.timeit()
@@ -42,8 +42,8 @@ trios = combinations(instruments, T)
 end_time = timeit.timeit()
 print(f"Время выполнения функционального подхода: {abs(end_time - start_time)} cек.")
 
-#2
-# алгоритмический подход
+# 2
+# Алгоритмический усложненный подход
 start_time = timeit.timeit()
 def algorithmic_approach():
     trios = []
@@ -59,6 +59,7 @@ def algorithmic_approach():
 end_time = timeit.timeit()
 Alg_time =  end_time - start_time
 
+# Усложненный подход с помощью функций
 # Функция для генерации случайной цены аренды инструмента
 def generate_rent_price():
     return random.randint(400, 600)
@@ -99,5 +100,5 @@ for trio, rent_sum in trios_optimal:
     print(f'Trio: {trio}, Сумма аренды: {rent_sum}')
 trios_optimal = filter_trios_by_rent(trios, optimal_price)
 print(f'Оптимальные варианты для аренды {trios_optimal}:')
-print(f'Время выполнения алгоритма c aeyr: {abs(end_time - start_time)} сек.')
-print(f'Время выполнения алгоритм gjl[jlf: {abs(Alg_time)} сек.')
+print(f'Время усложненного подхода с помощью функции: {abs(end_time - start_time)} сек.')
+print(f'Время усложненного алгоритмического подхода : {abs(Alg_time)} сек.')
