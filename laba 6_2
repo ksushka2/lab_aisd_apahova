@@ -1,48 +1,15 @@
-import time
+#Написать программу в соответствии со своим вариантом задания. Написать 2 варианта формирования (алгоритмический и с помощью функций Питона), сравнив по времени их выполнение.
+#В филармонии К музыкальных инструментов (музыкантов) Т типов. Сформировать все возможные варианты трио.
 from itertools import combinations
+import itertools
+import random
 import timeit
 
 K = int(input("Введите количество инструментов: "))
 T = int(input('Введите количество типов инструментов: '))
 
+
 instruments = list(range(0, K))
-# словарь частотных характеристик инструментов
-frequencies = {i: i % T for i in instruments}
-
-# словарь диапазонов частотных характеристик инструментов
-ranges = {i: (i % T, (i % T) + T - 1) for i in instruments}
-
-# алгоритмический подход
-start_time = time.time()
-trios = []
-for i in range(K - 2):
-    for j in range(i + 1, K - 1):
-        for k in range(j + 1, K):
-            trios.append((instruments[i], instruments[j], instruments[k]))
-end_time = time.time()
-
-for trio in trios:
-    print(trio)
-
-print("Время выполнения алгоритмического простого подхода:", end_time - start_time)
-
-# функциональный подход
-instruments = list(range(0, K ))
-
-start_time = time.time()
-trios = combinations(instruments, T)
-end_time = time.time()
-
-print("Время выполнения функционального простого подхода:", end_time - start_time)
-print('2 подход Списки типов инструментов:')
-for i in range(T):
-    instruments_of_type = [j for j in instruments if frequencies[j] == i]
-    range_of_type = ranges[instruments_of_type[0]]
-    print('Тип', i+1, instruments_of_type, 'диапазон', range_of_type)
-# усложненный вариант
-# список инструментов
-instruments = list(range(K))
-
 # словарь частотных характеристик инструментов
 frequencies = {i: i % T for i in instruments}
 
@@ -53,25 +20,31 @@ ranges = {i: (i % T, (i % T) + T - 1) for i in instruments}
 def is_in_range(instrument, frequency_range):
     return ranges[instrument][0] <= frequency_range <= ranges[instrument][1]
 
-# генерация всех возможных комбинаций инструментов длины 3, используя по одному инструменту из каждого типа
+# алгоритмический подход
+start_time = timeit.timeit()
 trios = []
-for i in range(K):
-    if i % T == 0:
-        for j in range(K):
-            if j % T == 1:
-                for k in range(K):
-                    if k % T == 2:
-                        trios.append((instruments[i], instruments[j], instruments[k]))
+for i in range(K - 2):
+    for j in range(i + 1, K - 1):
+        for k in range(j + 1, K):
+            trios.append((instruments[i], instruments[j], instruments[k]))
+end_time = timeit.timeit()
 
-# фильтрация комбинаций, которые не удовлетворяют условию
-trios = filter(lambda x: len(set(x)) == 3 and all(is_in_range(i, frequencies[j]) for i, j in zip(x, range(T))), trios)
-
-# вывод всех возможных трио
-print('Все возможные трио:')
 for trio in trios:
     print(trio)
 
+print(f"Время выполнения алгоритмического подхода: {abs(end_time - start_time)} cек.")
+
+# с помощью функций
+instruments = list(range(0, K ))
+
+start_time = timeit.timeit()
+trios = combinations(instruments, T)
+end_time = timeit.timeit()
+print(f"Время выполнения функционального подхода: {abs(end_time - start_time)} cек.")
+
+#2
 # алгоритмический подход
+start_time = timeit.timeit()
 def algorithmic_approach():
     trios = []
     for i in range(K):
@@ -83,24 +56,48 @@ def algorithmic_approach():
                             if all(is_in_range(x, frequencies[y]) for x, y in zip((i, j, k), range(T))):
                                 trios.append((i, j, k))
     return trios
+end_time = timeit.timeit()
+Alg_time =  end_time - start_time
 
-# функциональный подход
-def functional_approach():
-    trios = [(i, j, k) for i in instruments if i % T == 0 for j in instruments if j % T == 1 for k in instruments if k % T == 2]
-    trios = filter(lambda x: len(set(x)) == 3 and all(is_in_range(i, frequencies[j]) for i, j in zip(x, range(T))), trios)
-    return trios
+# Функция для генерации случайной цены аренды инструмента
+def generate_rent_price():
+    return random.randint(400, 600)
 
-# сравнение времени выполнения
-algorithmic_time = timeit.timeit(algorithmic_approach, number=10000)
-functional_time = timeit.timeit(functional_approach, number=10000)
+def filter_trios_by_rent(trios, optimal_price):
+    trios_optimal = []
+    for trio, rent_sum in trios:
+        if rent_sum <= optimal_price:
+            trios_optimal.append((trio, rent_sum))
+    return trios_optimal
 
-# вывод результатов
-print('Алгоритмический усложненный подход:', algorithmic_time)
-print('Функциональный усложненный подход:', functional_time)
 
-# вывод списка типов инструментов
-print('Списки типов инструментов:')
-for i in range(T):
-    instruments_of_type = [j for j in instruments if frequencies[j] == i]
-    range_of_type = ranges[instruments_of_type[0]]
-    print('Тип', i+1, instruments_of_type, 'диапазон', range_of_type)
+# Формирование списка инструментов для каждого типа
+instruments_by_type = [list(range(i, K, T)) for i in range(T)]
+
+# Вывод списка инструментов для каждого типа
+print("Список инструментов по типам:")
+for i, instruments in enumerate(instruments_by_type):
+    print(f"Т{i + 1}={instruments}")
+
+# Запрос типа инструментов для формирования трио
+type_choice = int(input(f"Выберите тип инструментов (от 1 до {T}): "))
+instruments = instruments_by_type[type_choice - 1]
+
+# Запрос оптимальной цены аренды инструмента
+optimal_price = int(input("Введите оптимальную цену аренды инструмента: "))
+
+start_time = timeit.timeit()
+
+trios = list(itertools.combinations(instruments, 3))
+trios = [(trio, sum([generate_rent_price() for _ in range(3)])) for trio in trios if (trio[0] % K != trio[1] % K) and (trio[0] % K != trio[2] % K) and (trio[1] % K != trio[2] % K)]
+trios_optimal = [(trio, rent_sum) for trio, rent_sum in trios if rent_sum <= 3 * optimal_price]
+
+end_time = timeit.timeit()
+
+print(f'Всего сформировано {len(trios)} трио инструментов типа {type_choice}:')
+for trio, rent_sum in trios_optimal:
+    print(f'Trio: {trio}, Сумма аренды: {rent_sum}')
+trios_optimal = filter_trios_by_rent(trios, optimal_price)
+print(f'Оптимальные варианты для аренды {trios_optimal}:')
+print(f'Время выполнения алгоритма c aeyr: {abs(end_time - start_time)} сек.')
+print(f'Время выполнения алгоритм gjl[jlf: {abs(Alg_time)} сек.')
