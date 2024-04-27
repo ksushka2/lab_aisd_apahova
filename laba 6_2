@@ -1,14 +1,45 @@
-#Усложнить написанную программу, введя по своему усмотрению в условие минимум одно ограничение на характеристики 
-#объектов (которое будет сокращать количество переборов)  и целевую функцию для нахождения оптимального  решения.
-#В филармонии К музыкальных инструментов (музыкантов) Т типов. Сформировать все возможные варианты трио.
-
+import time
 from itertools import combinations
 import timeit
 
-# ввод количества инструментов и количество типов инструментов
-K = int(input('Введите количество инструментов: '))
+K = int(input("Введите количество инструментов: "))
 T = int(input('Введите количество типов инструментов: '))
 
+instruments = list(range(0, K))
+# словарь частотных характеристик инструментов
+frequencies = {i: i % T for i in instruments}
+
+# словарь диапазонов частотных характеристик инструментов
+ranges = {i: (i % T, (i % T) + T - 1) for i in instruments}
+
+# алгоритмический подход
+start_time = time.time()
+trios = []
+for i in range(K - 2):
+    for j in range(i + 1, K - 1):
+        for k in range(j + 1, K):
+            trios.append((instruments[i], instruments[j], instruments[k]))
+end_time = time.time()
+
+for trio in trios:
+    print(trio)
+
+print("Время выполнения алгоритмического простого подхода:", end_time - start_time)
+
+# функциональный подход
+instruments = list(range(0, K ))
+
+start_time = time.time()
+trios = combinations(instruments, T)
+end_time = time.time()
+
+print("Время выполнения функционального простого подхода:", end_time - start_time)
+print('2 подход Списки типов инструментов:')
+for i in range(T):
+    instruments_of_type = [j for j in instruments if frequencies[j] == i]
+    range_of_type = ranges[instruments_of_type[0]]
+    print('Тип', i+1, instruments_of_type, 'диапазон', range_of_type)
+# усложненный вариант
 # список инструментов
 instruments = list(range(K))
 
@@ -53,18 +84,21 @@ def algorithmic_approach():
                                 trios.append((i, j, k))
     return trios
 
-# с помощью функций
+# функциональный подход
 def functional_approach():
     trios = [(i, j, k) for i in instruments if i % T == 0 for j in instruments if j % T == 1 for k in instruments if k % T == 2]
     trios = filter(lambda x: len(set(x)) == 3 and all(is_in_range(i, frequencies[j]) for i, j in zip(x, range(T))), trios)
     return trios
 
+# сравнение времени выполнения
 algorithmic_time = timeit.timeit(algorithmic_approach, number=10000)
 functional_time = timeit.timeit(functional_approach, number=10000)
 
-print('Algorithmic approach time:', algorithmic_time)
-print('Functional approach time:', functional_time)
+# вывод результатов
+print('Алгоритмический усложненный подход:', algorithmic_time)
+print('Функциональный усложненный подход:', functional_time)
 
+# вывод списка типов инструментов
 print('Списки типов инструментов:')
 for i in range(T):
     instruments_of_type = [j for j in instruments if frequencies[j] == i]
