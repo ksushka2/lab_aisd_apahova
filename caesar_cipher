@@ -1,0 +1,41 @@
+print("Программа шифрования по методу Цезаря.")
+alf = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
+
+print("Выберите режим работы:")
+choice = input()
+
+if choice == 'шифрование' or choice == 'Шифрование':
+    print("Введите сообщение для зашифровки:")
+    message = input() #исходный текст
+    print("Введите ключ для шифрования:")
+    key = int(input())
+    message_low = message.lower()
+    message_output = ''
+
+    for symbol in message_low:
+        position = alf.find(symbol)
+        new_posotion = position + key
+
+        if symbol in alf:
+            message_output = message_output + alf[new_posotion]
+        else:
+            message_output = message_output + symbol
+
+elif choice == 'дешифрование' or choice == 'Дешифрование':
+    print("Введите сообщение для разашифровки:")
+    message = input()  # исходный текст
+    print("Введите ключ для разшифрования:")
+    key = int(input())
+    message_low = message.lower()
+    message_output = ''
+
+    for symbol in message_low:
+        position = alf.find(symbol)
+        new_posotion = position - key
+
+        if symbol in alf:
+            message_output = message_output + alf[new_posotion]
+        else:
+            message_output = message_output + symbol
+
+print(message_output)
