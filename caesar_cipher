@@ -22,7 +22,7 @@ if choice == 'шифрование' or choice == 'Шифрование':
             message_output = message_output + symbol
 
 elif choice == 'дешифрование' or choice == 'Дешифрование':
-    print("Введите сообщение для разашифровки:")
+    print("Введите сообщение для раcшифровки:")
     message = input()  # исходный текст
     print("Введите ключ для разшифрования:")
     key = int(input())
